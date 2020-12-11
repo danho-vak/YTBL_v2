@@ -5,14 +5,14 @@ from django.shortcuts import render
 
 from maps.models import Coordinates
 
-
 def showMap(request):
     temp_object_list = None
     type_code = request.GET.get('type_code', None)
     if type_code == '1':
-        temp_object_list = Coordinates.objects.filter(type_code=1)
+        temp_object_list = Coordinates.objects.filter(type_code=1) | Coordinates.objects.filter(is_next_to=True)
     elif type_code == '2':
-        temp_object_list = Coordinates.objects.filter(type_code=2, is_next_to=True)
+        temp_object_list = Coordinates.objects.filter(type_code=2) | Coordinates.objects.filter(is_next_to=True)
+        print(temp_object_list)
     else:
         temp_object_list = Coordinates.objects.all()
 

@@ -7,7 +7,7 @@ class Coordinates(models.Model):
     longitude = models.FloatField()
     detail_info = models.CharField(null=True, default='', max_length=150) # 상세 위치
     type_code = models.SmallIntegerField() # type 1: 헌옷 수거함, type 2: 배터리/형광등 수거함
-    is_next_to = models.SmallIntegerField() # True: 옆에 배터리/형광등도 같이 있음
+    is_next_to = models.BooleanField() # True: 옆에 배터리/형광등도 같이 있음
 
 
 
