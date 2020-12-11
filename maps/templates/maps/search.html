@@ -1,0 +1,49 @@
+<!-- 검색창 modal 부분 -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="find-name" class="col-form-label text-dark">어디를 찾아볼까요?</label>
+                    <input type="text" class="form-control" id="find-name" onkeydown="enterKeyDown();" placeholder="ex)군자역 또는 중곡동">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="closeBtn" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                <button type="button" class="btn btn-primary" onclick="javascript:searchMap(document.getElementById('find-name').value);" data-dismiss="modal">찾아보기</button>
+                <script>
+                    function cleanInput() {
+                        document.getElementById('find-name').value = "";
+                    }
+                    function enterKeyDown(){
+                        if (window.event.keyCode == 13){
+                            searchMap(document.getElementById('find-name').value);
+                            document.getElementById('closeBtn').click();
+                        }
+                    }
+                    function searchMap(target){
+                        // 장소 검색 객체를 생성합니다
+                        var ps = new kakao.maps.services.Places();
+
+                        // 키워드로 장소를 검색합니다
+                        ps.keywordSearch(target, placesSearchCB);
+
+                        // 키워드 검색 완료 시 호출되는 콜백함수 입니다
+                        function placesSearchCB (data, status) {
+                            if (status === kakao.maps.services.Status.OK) {
+                                var bounds = new kakao.maps.LatLngBounds();
+                                bounds.extend(new kakao.maps.LatLng(data[0].y, data[0].x));
+                                //장소 위치를 기준으로 지도 범위를 재설정합니다
+                                map.setBounds(bounds);
+                            } else if (status === kakao.maps.services.Status.ZERO_RESULT) {
+                                alert('어딘지 모르겠어요 :(');
+                            } else {
+                                alert('카카오맵 응답 에러!');
+                            }
+                        }
+                    }
+                </script>
+            </div>
+        </div>
+    </div>
+</div>
