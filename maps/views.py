@@ -5,6 +5,16 @@ from django.shortcuts import render
 
 from maps.models import Coordinates
 
+'''
+    function :
+        showMap : DB에서 좌표 데이터를 가져와 templates/maps/map.html로 값을 넘겨주는 function
+    
+    args :
+        temp_object_list : QuerySet을 받을 변수
+        type_code : get방식으로 url 파라미터를 받을 변수
+        cords_json : QuerySet을 list로 캐스팅 후 json으로 변환한 데이터를 가질 변수
+'''
+
 def showMap(request):
     temp_object_list = None
     type_code = request.GET.get('type_code', None)
