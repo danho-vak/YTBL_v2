@@ -23,4 +23,5 @@ urlpatterns = [
 
     path('', showMap, name='map'),
     path('ytbl/', include('maps.urls')),
+    path('accounts/', include('accounts.urls')),
 ]

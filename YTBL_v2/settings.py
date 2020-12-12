@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'imagekit',  # django-imagekit
     'maps',
+    'accounts',
 ]
 
 MIDDLEWARE = [
@@ -154,3 +155,7 @@ MEDIA_URL = '/media/'
 
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
+
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.User'
