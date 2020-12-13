@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<div class="container">
+    <div class="text-center" id="container_child_div">
+        <h2 class="mb-4">{{ target_user.username }}님의 정보입니다.</h2>
+        <table class="table table-hover;">
+            <tr>
+                <th style="vertical-align: middle;">E-mail</th>
+                <td><input type="text" id="id_email" name="email" size="30" value="{{ target_user.email }}" disabled="disabled"></td>
+            </tr>
+            <tr>
+                <th style="vertical-align: middle;">닉네임</th>
+                <td><input type="text" id="id_username" name="username" size="30" value="{{ target_user.username }}" disabled="disabled"></td>
+            </tr>
+            <tr>
+                <th style="vertical-align: middle;"><label>가입 일자</label></th>
+                <td><input type="text" id="id_created_id" name="created_at" size="30" value="{{ target_user.created_at }}" disabled="disabled"></td>
+            </tr>
+            <tr>
+                <th></th>
+                <td>
+                    <button class="btn btn-danger" onclick="location.href='{% url 'accounts:update' pk=target_user.pk %}'">비밀번호 변경</button>
+                </td>
+            </tr>
+            <tr>
+                <th></th>
+                <td class="text-right"><button class="btn btn-secondary" onclick="location.href='{% url 'accounts:delete' pk=user.pk %}'">회원탈퇴</button></td>
+            </tr>
+        </table>
+    </div>
+</div>
+{% endblock %}

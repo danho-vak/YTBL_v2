@@ -2,14 +2,14 @@
 <html lang="en">
 {% include 'head.html' %}
 
-<body class="text-white bg-light">
+<body class="text-white bg-light text-dark">
     {% include 'header.html' %}
 
-<!-- alert response messages -->
+<!-- alerting response messages -->
     {% if messages %}
         {% for message in messages %}
             <script>
-                alert('{{message}}');
+                alert('{{ message }}');
             </script>
         {% endfor %}
     {% endif %}

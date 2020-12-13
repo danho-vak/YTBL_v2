@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="text-center" style="padding:10% 0 0 0;">
+    <form class="form-signin" action="{% url 'accounts:delete' pk=user.pk %}" method="POST">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'images/base/YTBL_logo_square.png' %}" width="100px" height="100px">
+        <hr>
+        <h1 class="h3 mb-4 text-dark font-weight-normal">정말 탈퇴하시겠어요?</h1>
+        <small class="text-muted">아쉽네요..</small>
+        <hr>
+        <div class="row pt-4">
+            <div class="col-6">
+                <button class="btn btn-lg btn-success btn-block" type="button" onclick="history.back();">뒤로</button>
+            </div>
+            <div class="col-6">
+                <button class="btn btn-lg btn-danger btn-block" type="submit">탈퇴하기</button>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

@@ -14,6 +14,8 @@ from pathlib import Path
 import environ
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+from django.urls import reverse_lazy
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
@@ -159,3 +161,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Custom User Model
 AUTH_USER_MODEL = 'accounts.User'
+
+
+# Login, Logout Redirect URLs
+LOGIN_REDIRECT_URL = reverse_lazy('maps:map')
+LOGOUT_REDIRECT_URL = reverse_lazy('maps:map')

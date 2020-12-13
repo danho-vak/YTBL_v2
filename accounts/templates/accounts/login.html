@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+    <div class="text-center" style="padding:10% 0 0 0;">
+    <form class="form-signin" action="{% url 'accounts:login' %}" method="POST">
+        {% csrf_token %}
+        <img class="mb-4" src="{% static 'images/base/YTBL_logo_square.png' %}" width="100px" height="100px">
+        <h1 class="h3 mb-3 text-dark font-weight-normal">로그인 해주세요!</h1>
+        <label for="id_username" class="sr-only">Email</label>
+        <input type="email" name="username" id="id_username" class="form-control" placeholder="Email" required autofocus>
+        <label for="id_password" class="sr-only">Password</label>
+        <input type="password" name="password" id="id_password" class="form-control" placeholder="Password" required>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">로그인</button>
+        <button class="btn btn-lg btn-primary btn-block" type="button" onclick="location.href='{% url 'accounts:create' %}'">회원가입</button>
+    </form>
+</div>
+{% endblock %}
+
+<!--
+
+    form의 password help_text를 bootstrap에 팝업 info로 돌리자
+
+
+-->
