@@ -13,3 +13,7 @@ class Post(models.Model):
 
     def __str__(self):
         return self.content
+
+class PostImage(models.Model):
+    target_post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='images/posts/', blank=True, null=True)
