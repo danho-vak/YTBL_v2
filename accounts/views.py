@@ -22,7 +22,7 @@ class AccountCreateView(CreateView):
     model = User
     form_class = CustomUserCreationForm
     template_name = 'accounts/create.html'
-    success_url = reverse_lazy('maps:map')
+    success_url = reverse_lazy('accounts:login')
 
 
 # logout는 내장 제네릭뷰를 통해 urls.py에 구현
