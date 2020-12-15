@@ -85,6 +85,10 @@
             </div>
         </div>
     </div>
+
+    <!--  댓글 목록 include  -->
+    {% include 'comments/list.html' with comment_list=target_post.comment_set.all %}
+
 </div>
 
 {% endblock %}

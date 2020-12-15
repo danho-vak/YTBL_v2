@@ -206,22 +206,27 @@ function commentDelete(comment_id) {
 
 function commentCreate(post_id){
     var content = $('#comment_input_text').val()
-    $.ajax({
-        url : '/social/'+post_id+'/comment/create/',
-        type : 'post',
-        data : {
-            post_id : post_id,
-            content : content,
-            csrfmiddlewaretoken: csrftoken
-        },
-        success : function(){
-            location.reload();
-            alert('댓글 작성 성공!');
-        },
-        error : function (request, status, error){
-            alert('code:'+request.status+'\nerror:'+error+'\n서버 응답 실패!');
-        }
-    });
+
+    if (!content){
+        alert('내용을 입력해주세요!');
+    } else {
+        $.ajax({
+            url : '/comments/create/'+post_id,
+            type : 'post',
+            data : {
+                post_id : post_id,
+                content : content,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success : function(){
+                location.reload();
+                alert('댓글 작성 성공!');
+            },
+            error : function (request, status, error){
+                alert('code:'+request.status+'\nerror:'+error+'\n서버 응답 실패!');
+            }
+        });
+    }
 }
 
 

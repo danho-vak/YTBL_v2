@@ -58,6 +58,7 @@ class PostDetailView(DetailView):
     template_name = 'posts/detail.html'
 
 
+
 @method_decorator(HAS_OWNERSHIP, 'get')
 @method_decorator(HAS_OWNERSHIP, 'post')
 class PostUpdateView(UpdateView):
@@ -73,6 +74,15 @@ class PostUpdateView(UpdateView):
 class PostDeleteView(DeleteView):
     model = Post
     success_url = reverse_lazy('posts:list')
+
+    # 서버에 저장된 원본 이미지 삭제
+    def post(self, request, *args, **kwargs):
+        post = Post.objects.get(pk=request.POST.get('post_id'))
+        if post.postimage_set.exists():  # PostImage에 하나라도 이미지를 갖는다면
+            for image_object in post.postimage_set.all():
+                image_object.image.delete()
+
+        return super().post(request, *args, **kwargs)
 
 
 @method_decorator(login_required, 'get')

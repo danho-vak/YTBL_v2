@@ -1,0 +1,60 @@
+<!--  댓글 영역  -->
+<table class="table table-sm table-hover">
+    {% if comment_list %}
+        {% for comment in comment_list %}
+            <tr class="text-left">
+                <th scope="row">
+                    <small class="font-weight-bold">{{ comment.author.username }}</small>
+                </th>
+                <td class="col">
+                    <small>{{ comment.content }}</small>
+                </td>
+                <td class="">
+                    <small>
+                        {{ comment.created_at | date:"Y.m.d." }}
+                    </small>
+                </td>
+                {% if comment.author.email == user.email or user.is_admin %}
+                <td>
+                    <svg onclick="commentDelete({{ comment.id }});" width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-trash" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                        <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                    </svg>
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td> 아직 댓글이 없네요..! ;_; </td>
+        </tr>
+    {% endif %}
+    <tr>
+        <td colspan="3">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="inputGroup-sizing-sm">
+                        <small>
+                        {% if user.is_authenticated %}
+                            {{ user.username }}
+                        {% else %}
+                            visitor
+                        {% endif %}
+                        </small>
+                    </span>
+                </div>
+                {% if user.is_authenticated %}
+                <input type="text" id="comment_input_text" class="form-control mt-0" name="content" placeholder="댓글은 요기요기!" required>
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-primary" type="button" onclick="commentCreate({{ target_post.id }});" id="button-addon2">등록</button>
+                </div>
+                {% else %}
+                <input type="text" class="form-control mt-0" placeholder="로그인 해주세요!" onclick="javascript:loginRequired();">
+                <div class="input-group-append">
+                    <button class="btn btn-sm btn-primary" type="button" onclick="javascript:loginRequired();">등록</button>
+                </div>
+                {% endif %}
+            </div>
+        </td>
+    </tr>
+</table>
