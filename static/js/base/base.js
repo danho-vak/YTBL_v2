@@ -28,3 +28,9 @@ $.ajaxSetup({
         }
     }
 });
+
+// 로그인 페이지로 넘기는 script
+function loginRequired(){
+    alert('로그인 해주세요!');
+    location.href='/account/signIn/';
+}

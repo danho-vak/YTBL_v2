@@ -1,23 +1,26 @@
+import json
+
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
 from django.shortcuts import render
 
-# Create your views here.
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
-from django.views.generic import ListView, CreateView
-from django.views.generic.edit import FormMixin
+from django.views.generic import ListView, CreateView, DetailView
+from django.views.generic.edit import FormMixin, UpdateView, DeleteView
 from django.views.generic.list import MultipleObjectMixin
 
 from accounts.models import User
-from posts.decorator import account_ownership_required
+from posts.decorator import post_ownership_required
 from posts.forms import PostCreationForm
 from posts.models import Post, PostImage
 
-has_ownership = [account_ownership_required, login_required]
+
+HAS_OWNERSHIP = [post_ownership_required, login_required]
 
 
 class PostListView(ListView, FormMixin, MultipleObjectMixin):
-    model = Post
+    queryset = Post.objects.all().select_related().order_by('-created_at')
     context_object_name = 'post_list'
     form_class = PostCreationForm
     paginate_by = 5
@@ -36,7 +39,6 @@ class PostCreateView(CreateView):
         new_post.author = self.request.user
         new_post.save()
 
-
         # 이 방식이 좀 맘에 안듬.. 한번에 save하는 방식을 찾아보자자
         if self.request.FILES.getlist('images'):
             for image in self.request.FILES.getlist('images'):
@@ -47,4 +49,46 @@ class PostCreateView(CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse_lazy('posts:list')
+        return reverse('posts:list')
+
+
+class PostDetailView(DetailView):
+    model = Post
+    context_object_name = 'target_post'
+    template_name = 'posts/detail.html'
+
+
+@method_decorator(HAS_OWNERSHIP, 'get')
+@method_decorator(HAS_OWNERSHIP, 'post')
+class PostUpdateView(UpdateView):
+    model = Post
+    form_class = PostCreationForm
+
+    def get_success_url(self):  # 이게 왜 안되는지 알아보자
+        return reverse('posts:detail', kwargs={'pk':self.object.pk})
+
+
+@method_decorator(HAS_OWNERSHIP, 'get')
+@method_decorator(HAS_OWNERSHIP, 'post')
+class PostDeleteView(DeleteView):
+    model = Post
+    success_url = reverse_lazy('posts:list')
+
+
+@method_decorator(login_required, 'get')
+@method_decorator(login_required, 'post')
+class PostLikeView(UpdateView):
+    def post(self, request, *args, **kwargs):
+        user = User.objects.get(pk=request.user.pk)
+        target_post = Post.objects.get(pk=request.POST.get('post_id'))
+
+        if user in target_post.like_users.all():
+            target_post.like_users.remove(user)
+            target_post.likes -= 1
+            target_post.save()
+        else:
+            target_post.like_users.add(user)
+            target_post.likes += 1
+            target_post.save()
+
+        return HttpResponse(json.dumps(target_post.likes), content_type='application/json')

@@ -17,7 +17,7 @@
             <div class="card-title border-bottom">
                 <div class="row justify-content-between">
                     <div class="col-auto">
-                        <h6>{{ post.author }}</h6>
+                        <h6>{{ post.author.username }}</h6>
                     </div>
                     {% if post.author.pk == user.pk %}
                         <div class="col-auto dropright" id="dropdown_btn_{{ post.pk }}">

@@ -12,19 +12,22 @@
                 <div class="collapse navbar-collapse" id="navbarText">
 <!-- 네비 목록은 기존 ytbl에서 가져올 예정 -->
                     <ul class="navbar-nav ml-auto mt-2">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'posts:list' %}">라이프</a>
+                        </li>
                     {% if user.is_authenticated %}
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="{% url 'accounts:detail' pk=user.pk %}">{{ user.username }}</a>
+                            <a class="nav-link" href="{% url 'accounts:detail' pk=user.pk %}">{{ user.username }}</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="{% url 'accounts:logout' %}">로그아웃!</a>
+                            <a class="nav-link" href="{% url 'accounts:logout' %}">로그아웃!</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="{% url 'accounts:create' %}">회원가입</a>
+                            <a class="nav-link" href="{% url 'accounts:create' %}">회원가입</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" href="{% url 'accounts:login' %}">로그인</a>
+                            <a class="nav-link" href="{% url 'accounts:login' %}">로그인</a>
                         </li>
                     {% endif %}
                     </ul>

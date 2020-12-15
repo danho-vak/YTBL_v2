@@ -1,12 +1,12 @@
-from django.shortcuts import get_object_or_404, redirect
+from django.http import HttpResponseForbidden
 
-from accounts.models import User
+from posts.models import Post
 
 
-def account_ownership_required(func):
+def post_ownership_required(func):
     def decorated(request, *args, **kwargs):
-        user = get_object_or_404(User, pk=kwargs['pk'])
-        if not user == request.user:
-            return redirect('accounts:login')
+        post = Post.objects.get(pk=kwargs['pk'])
+        if not post.author == request.user:
+            return HttpResponseForbidden()
         return func(request, *args, **kwargs)
     return decorated

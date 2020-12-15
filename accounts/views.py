@@ -15,7 +15,7 @@ from accounts.models import User
 
 
 # define custom decorator
-has_ownership = [account_ownership_required, login_required]
+HAS_OWNERSHIP = [account_ownership_required, login_required]
 
 
 class AccountCreateView(CreateView):
@@ -31,15 +31,15 @@ class AccountLoginView(LoginView):
     success_url = reverse_lazy('maps:map')
 
 
-@method_decorator(has_ownership, 'get')
+@method_decorator(HAS_OWNERSHIP, 'get')
 class AccountDetailView(DetailView):
     model = User
     template_name = 'accounts/detail.html'
     context_object_name = 'target_user'
 
 
-@method_decorator(has_ownership, 'get')
-@method_decorator(has_ownership, 'post')
+@method_decorator(HAS_OWNERSHIP, 'get')
+@method_decorator(HAS_OWNERSHIP, 'post')
 class AccountPWChangeView(FormView):
     model = User
     form_class = PasswordChangeForm
@@ -61,8 +61,8 @@ class AccountPWChangeView(FormView):
         return reverse('accounts:detail', kwargs={'pk':self.request.user.pk})
 
 
-@method_decorator(has_ownership, 'get')
-@method_decorator(has_ownership, 'post')
+@method_decorator(HAS_OWNERSHIP, 'get')
+@method_decorator(HAS_OWNERSHIP, 'post')
 class AccountDeleteView(DeleteView):
     model = User
     template_name = 'accounts/delete.html'

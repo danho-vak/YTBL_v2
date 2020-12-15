@@ -54,13 +54,15 @@ $(document).ready(function(){
     });
 });
 
+// ----------------------------------- post 관련  --------------------------------------
 
 // post update 요청하는 script
 function postUpdate(clicked_item, post_id){
     var content = $(clicked_item).parents('div').find('#id_content_'+post_id);
     var content_value = $(clicked_item).parents('div').find('#id_content_'+post_id).val();
+
     $.ajax({
-        url : '/posts/update/', //'{% url 'social:postUpdate' %}',
+        url : '/posts/update/'+post_id, //'{% url 'social:postUpdate' %}',
         type : 'POST',
         data : {
                 post_id: post_id,
@@ -92,6 +94,31 @@ function setPostToUpdateForm(clicked_item, post_id){
 }
 
 
+// post 삭제 script
+function postDelete(post_id){
+    var con = confirm('정말 삭제할까요?');
+    if (con == true){
+        $.ajax({
+            url : '/posts/delete/'+post_id,
+            type : 'POST',
+            data : {
+                post_id: post_id,
+                csrfmiddlewaretoken: csrftoken,
+            },
+            success: function(data){
+                alert('삭제 완료!')
+                location.reload();
+            }, error: function(err, status){
+                alert('서버 응답 실패!')
+            }
+        });
+
+        // location.href='/posts/delete/'+post_id;
+    }
+}
+
+
+// ----------------------------------- 좋아요, 댓글 관련  --------------------------------------
 // post 댓글 icon 채우기 및 마지막 댓글 불러오는 script
 function fillCommentIcon(target_object, post_id){
     var object = $(target_object).children();
@@ -108,7 +135,7 @@ function fillCommentIcon(target_object, post_id){
 }
 
 // post 좋아요 기능 비동기 통신 script
-function ILikeThis(dom, target_post){
+function ILikeThis(dom, post_id){
     var svg = $(dom).find('svg')
     var path = svg.find('path');
     var likes = $(dom).parents('div').prev().children('#likes_count');
@@ -117,9 +144,9 @@ function ILikeThis(dom, target_post){
     var non_fill_heart = '<path fill-rule="evenodd" d="M8 6.236l.894-1.789c.222-.443.607-1.08 1.152-1.595C10.582 2.345 11.224 2 12 2c1.676 0 3 1.326 3 2.92 0 1.211-.554 2.066-1.868 3.37-.337.334-.721.695-1.146 1.093C10.878 10.423 9.5 11.717 8 13.447c-1.5-1.73-2.878-3.024-3.986-4.064-.425-.398-.81-.76-1.146-1.093C1.554 6.986 1 6.131 1 4.92 1 3.326 2.324 2 4 2c.776 0 1.418.345 1.954.852.545.515.93 1.152 1.152 1.595L8 6.236zm.392 8.292a.513.513 0 0 1-.784 0c-1.601-1.902-3.05-3.262-4.243-4.381C1.3 8.208 0 6.989 0 4.92 0 2.755 1.79 1 4 1c1.6 0 2.719 1.05 3.404 2.008.26.365.458.716.596.992a7.55 7.55 0 0 1 .596-.992C9.281 2.049 10.4 1 12 1c2.21 0 4 1.755 4 3.92 0 2.069-1.3 3.288-3.365 5.227-1.193 1.12-2.642 2.48-4.243 4.38z"/>';
 
     $.ajax({
-        url : '/posts/like/', // {% url 'social:postLike' %}
-        type: 'get',
-        data : {'post_id' : target_post},
+        url : '/posts/like/'+post_id, // {% url 'social:postLike' %}
+        type: 'POST',
+        data : {'post_id' : post_id},
         dataType: 'json',
         success: function(data){
             if (path.attr('fill-rule') == 'evenodd') {
@@ -137,13 +164,6 @@ function ILikeThis(dom, target_post){
     });
 }
 
-// post 삭제 script
-function postDelete(post_id){
-    var con = confirm('정말 삭제할까요?');
-    if (con == true){
-        location.href="/posts/delete/?post_id="+post_id; // {% url 'social:postDelete' %}
-    }
-}
 
 
 // post 마지막 댓글 가져오는 script
@@ -161,34 +181,6 @@ function getLastComment(post_id){
         }
     });
 }
-
-
-// 로그인 페이지로 넘기는 script
-function loginRequired(){
-    alert('로그인 해주세요!');
-    location.href='/account/signIn/';
-}
-
-
-// 무한스크롤 script
- function callMorePostAjax(page) {
-    $.ajax( {
-    url: '/social/more/', //“{% url ‘post_list_ajax’ %}”,
-    type : 'post',
-    dataType: 'html',
-    data: {
-        page: page,
-        csrfmiddlewaretoken: csrftoken
-    },
-    success: addMorePostAjax
-    });
-}
-
-// 해당 id div tag에 내용을 append
-function addMorePostAjax(data) {
-    $('#post_list_ajax').append(data);
-}
-
 
 // 댓글 삭제 요청 보내는 script
 function commentDelete(comment_id) {
@@ -230,4 +222,26 @@ function commentCreate(post_id){
             alert('code:'+request.status+'\nerror:'+error+'\n서버 응답 실패!');
         }
     });
+}
+
+
+// ----------------------------------- 무한 스크롤 관련  --------------------------------------
+
+// 무한스크롤 script
+ function callMorePostAjax(page) {
+    $.ajax( {
+    url: '/social/more/', //“{% url ‘post_list_ajax’ %}”,
+    type : 'post',
+    dataType: 'html',
+    data: {
+        page: page,
+        csrfmiddlewaretoken: csrftoken
+    },
+    success: addMorePostAjax
+    });
+}
+
+// 해당 id div tag에 내용을 append
+function addMorePostAjax(data) {
+    $('#post_list_ajax').append(data);
 }
