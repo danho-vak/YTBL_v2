@@ -62,12 +62,12 @@ function postUpdate(clicked_item, post_id){
     var content_value = $(clicked_item).parents('div').find('#id_content_'+post_id).val();
 
     $.ajax({
-        url : '/posts/update/'+post_id, //'{% url 'social:postUpdate' %}',
+        url : '/posts/update/'+post_id,
         type : 'POST',
         data : {
                 post_id: post_id,
                 content: content_value,
-                csrfmiddlewaretoken: csrftoken // ytbl/base.js 에서 csrf token 가져옴
+                csrfmiddlewaretoken: csrftoken
                 },
         success: function(data){
             alert('수정 완료!');
@@ -159,7 +159,7 @@ function ILikeThis(dom, post_id){
         },
         error : function(err, status){
             alert('로그인 해주세요!!');
-            location.href='/accounts/login/'; // {% url 'account:signIn' %}
+            location.href='/accounts/login/';
         }
     });
 }
@@ -169,9 +169,11 @@ function ILikeThis(dom, post_id){
 // post 마지막 댓글 가져오는 script
 function getLastComment(post_id){
     $.ajax({
-        url : '/posts/comment/last/', // {% url 'social:getLastComment' %}
+        url : '/comments/last/'+post_id,
         type: 'get',
-        data : {'post_id':post_id},
+        data : {
+            post_id : post_id
+        },
         dataType : 'html',
         success : function(data){
             $('#in_collapse_comments_'+post_id).html(data);
@@ -187,7 +189,7 @@ function commentDelete(comment_id) {
     var trigger = confirm('정말 삭제하시겠어요?')
     if (trigger){
         $.ajax({
-            url : '/social/comment/delete/',
+            url : '/comments/delete/'+comment_id,
             type : 'post',
             data : {
                 comment_id : comment_id,
@@ -205,7 +207,7 @@ function commentDelete(comment_id) {
 }
 
 function commentCreate(post_id){
-    var content = $('#comment_input_text').val()
+    var content = $('#comment_input_text_'+post_id).val()
 
     if (!content){
         alert('내용을 입력해주세요!');
@@ -219,7 +221,7 @@ function commentCreate(post_id){
                 csrfmiddlewaretoken: csrftoken
             },
             success : function(){
-                location.reload();
+                location.href = '/posts/detail/'+post_id;
                 alert('댓글 작성 성공!');
             },
             error : function (request, status, error){
@@ -235,7 +237,7 @@ function commentCreate(post_id){
 // 무한스크롤 script
  function callMorePostAjax(page) {
     $.ajax( {
-    url: '/social/more/', //“{% url ‘post_list_ajax’ %}”,
+    url: '/social/more/',
     type : 'post',
     dataType: 'html',
     data: {

@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render
 
@@ -8,7 +9,7 @@ from django.urls import reverse_lazy, reverse
 from django.utils.decorators import method_decorator
 from django.views.generic import ListView, CreateView, DetailView
 from django.views.generic.edit import FormMixin, UpdateView, DeleteView
-from django.views.generic.list import MultipleObjectMixin
+
 
 from accounts.models import User
 from posts.decorator import post_ownership_required
@@ -19,10 +20,9 @@ from posts.models import Post, PostImage
 HAS_OWNERSHIP = [post_ownership_required, login_required]
 
 
-class PostListView(ListView, FormMixin, MultipleObjectMixin):
-    queryset = Post.objects.all().select_related().order_by('-created_at')
+class PostListView(ListView):
+    queryset = Post.objects.all().annotate(comment_count=Count('comment')).select_related().order_by('-created_at')
     context_object_name = 'post_list'
-    form_class = PostCreationForm
     paginate_by = 5
     template_name = 'posts/list.html'
 
