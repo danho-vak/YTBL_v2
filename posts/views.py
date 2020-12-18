@@ -1,6 +1,7 @@
 import json
 
 from django.contrib.auth.decorators import login_required
+from django.core.paginator import Paginator
 from django.db.models import Count
 from django.http import HttpResponse
 from django.shortcuts import render
@@ -25,6 +26,16 @@ class PostListView(ListView):
     context_object_name = 'post_list'
     paginate_by = 5
     template_name = 'posts/list.html'
+
+    def get(self, request, *args, **kwargs):
+        page = request.GET.get('page')
+        if page is not None:
+            post_items = super(PostListView, self).get_queryset()
+            paginator = Paginator(post_items, 5)
+            items = paginator.get_page(page)
+
+            return render(request, 'posts/snippets/post_list_item.html', {'post_list':items})
+        return super().get(request, *args, **kwargs)
 
 
 @method_decorator(login_required, 'get')
