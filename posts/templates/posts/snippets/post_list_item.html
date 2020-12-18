@@ -1,5 +1,3 @@
-{% load imagekit %}
-
 {% for post in post_list %}
 <div class="card mb-5" style="background-color:#f2f2f2;">
     <input type="hidden" id="id_post_{{ post.pk }}" value="{{ post.pk }}">
@@ -36,13 +34,13 @@
         </div>
         <div class="card-text text-right"><small class="text-muted">{{ post.created_at }}</small></div>
         <div class="card-text mb-4" id="post_{{ post.id }}_content">{{ post.content }}</div>
-        <div class="card-text" style="width:300px;">
-        {% if post.postimage_set %}
-            {% for image in post.postimage_set.all %}
-                {% thumbnail "300x300" image.image %}
-            {% endfor %}
+        <div class="card-text text-center" >
+
+        {% if post.postimage_set.exists %}
+            {% include 'posts/snippets/post_list_item_carousel.html' with image_list=post.postimage_set.all %}
         {% endif %}
         </div>
+
         <div class="card-text mt-2 ml-3">
             <small id="likes_count" class="text-muted">{{ post.likes }} likes</small>
         </div>
