@@ -10,26 +10,6 @@ $(document).ready(function(){
     }
 
 
-      // 무한 스크롤 - 스크롤 event
-    $(window).scroll(function(){
-        var scrollTop = $(window).scrollTop();
-        var documentHeight = $(document).height();
-        var windowHeight = $(window).height();
-
-        if( scrollTop >= documentHeight - windowHeight){
-            var timer;
-            if (!timer) {
-                timer = setTimeout(function(){
-                    timer = null;
-                    var page = $('#page').val();
-                    callMorePostAjax(page);
-                    $('#page').val(parseInt(page)+1);
-                }, 500);
-            }
-        }
-    });
-
-
     // input file에 파일 선택시 label의 값을 file name으로 바꾸는 script
     $('#inputGroupFile01').change(function(){
         file_name = $('#inputGroupFile01')[0].files[0].name;
@@ -232,23 +212,28 @@ function commentCreate(post_id){
 }
 
 
-// ----------------------------------- 무한 스크롤 관련  --------------------------------------
+function commentChildCreate(post_id, comment_id){
+    var content = $('#id_content_'+comment_id).val()
 
-// 무한스크롤 script
- function callMorePostAjax(page) {
-    $.ajax( {
-    url: '/social/more/',
-    type : 'post',
-    dataType: 'html',
-    data: {
-        page: page,
-        csrfmiddlewaretoken: csrftoken
-    },
-    success: addMorePostAjax
-    });
-}
-
-// 해당 id div tag에 내용을 append
-function addMorePostAjax(data) {
-    $('#post_list_ajax').append(data);
+    if (!content){
+        alert('내용을 입력해주세요!');
+    } else {
+        $.ajax({
+            url : '/comments/'+post_id+'/'+comment_id+'/child/create',
+            type : 'post',
+            data : {
+                post_id : post_id,
+                parent_id : comment_id,
+                content : content,
+                csrfmiddlewaretoken: csrftoken
+            },
+            success : function(){
+                location.href = '/posts/detail/'+post_id;
+                alert('댓글 작성 성공!');
+            },
+            error : function (request, status, error){
+                alert('code:'+request.status+'\nerror:'+error+'\n서버 응답 실패!');
+            }
+        });
+    }
 }

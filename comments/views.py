@@ -16,7 +16,7 @@ HAS_OWNERSHIP = [comment_ownership_required, login_required]
 
 
 '''
-    Comment Creation View
+    Parent Comment Creation View
 '''
 @method_decorator(login_required, 'get')
 @method_decorator(login_required, 'post')
@@ -28,6 +28,27 @@ class CommentCreateView(CreateView):
         new_form = form.save(commit=False)
         new_form.author = self.request.user
         new_form.post = Post.objects.get(pk=self.request.POST.get('post_id'))
+        new_form.save()
+        return super().form_valid(form)
+
+    def get_success_url(self):
+        return reverse('posts:detail', kwargs={'pk': self.request.POST.get('post_id')})
+
+
+'''
+    Child Comment Creation View
+'''
+@method_decorator(login_required, 'get')
+@method_decorator(login_required, 'post')
+class CommentChildCreateView(CreateView):
+    model = Comment
+    form_class = CommentCreationForm
+
+    def form_valid(self, form):
+        new_form = form.save(commit=False)
+        new_form.author = self.request.user
+        new_form.post = Post.objects.get(pk=self.request.POST.get('post_id'))
+        new_form.parent = Comment.objects.get(pk=self.request.POST.get('parent_id'))
         new_form.save()
         return super().form_valid(form)
 
@@ -61,3 +82,5 @@ class GetLastCommentView(ListView):
     def get_queryset(self):
         last_comment = Comment.objects.filter(post=self.request.GET.get('post_id')).last()
         return last_comment
+
+

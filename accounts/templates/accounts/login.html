@@ -2,7 +2,7 @@
 {% load static %}
 {% block content %}
     <div class="text-center" style="padding:10% 0 0 0;">
-    <form class="form-signin" action="{% url 'accounts:login' %}" method="POST">
+    <form class="form-signin" action="" method="POST">
         {% csrf_token %}
         <img class="mb-4" src="{% static 'images/base/YTBL_logo_square.png' %}" width="100px" height="100px">
         <h1 class="h3 mb-3 text-dark font-weight-normal">로그인 해주세요!</h1>
@@ -15,10 +15,3 @@
     </form>
 </div>
 {% endblock %}
-
-<!--
-
-    form의 password help_text를 bootstrap에 팝업 info로 돌리자
-
-
--->

@@ -5,6 +5,7 @@
 {% block content %}
 <!-- load scripts -->
 <script src="{% static 'js/posts/posts.js' %}"></script>
+<script src="{% static 'js/posts/infinite_scroll.js' %}"></script>
 
 <div class="container mt-4 text-center text-dark" id="post_main_container">
     {% if user.is_authenticated %}
