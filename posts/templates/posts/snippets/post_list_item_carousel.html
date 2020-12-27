@@ -9,7 +9,6 @@ ol[class='carousel-indicators'] > li {
 
 <div id="carouselExampleIndicators_{{ post.pk }}" class="carousel slide w-100" data-ride="carousel">
     <ol class="carousel-indicators">
-        <li data-target="#carouselExampleIndicators_{{ post.pk }}" data-slide-to="0" class="active"></li>
         {% for image in image_list %}
         <li data-target="#carouselExampleIndicators_{{ post.pk }}" data-slide-to="{{ forloop.counter }}"></li>
         {% endfor %}
@@ -32,4 +31,5 @@ ol[class='carousel-indicators'] > li {
 
 <script>
     $('.carousel-inner').children(':first-child').attr('class', 'carousel-item active');
+    $('.carousel-indicators').children(':first-child').attr('class', 'active');
 </script>
