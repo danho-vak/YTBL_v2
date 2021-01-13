@@ -6,7 +6,6 @@ ol[class='carousel-indicators'] > li {
 }
 
 </style>
-
 <div id="carouselExampleIndicators_{{ post.pk }}" class="carousel slide w-100" data-ride="carousel">
     <ol class="carousel-indicators">
         {% for image in image_list %}
@@ -16,8 +15,7 @@ ol[class='carousel-indicators'] > li {
     <div class="carousel-inner">
         {% for image in image_list %}
         <div class="carousel-item">
-            {% thumbnail '300x300' image.image as thumb %}
-            <img src="{{ thumb.url }}" class="d-block w-100" onclick="location.href='{% url 'posts:detail' pk=post.pk %}'">
+            <img src="{{ image.image.url }}" class="d-block w-100">
         </div>
         {% endfor %}
     </div>

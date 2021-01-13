@@ -42,11 +42,11 @@
                 </div>
             </div>
             <div class="card-text text-right"><small class="text-muted">{{ target_post.created_at }}</small></div>
-            <div class="card-text mb-4" id="post_{{ target_post.id }}_content">{{ target_post.content }}</div>
+            <div class="card-text mb-4" id="post_{{ target_post.id }}_content">{{ target_post.content | linebreaks }}</div>
             <div class="card-text w-75" style="margin:0 auto;">
-
                 {% if target_post.postimage_set.exists %}
-                    {% include 'posts/snippets/post_list_item_carousel.html' with image_list=target_post.postimage_set.all %}
+
+                    {% include 'posts/snippets/post_detail_carousel.html' with image_list=target_post.postimage_set.all %}
                 {% endif %}
 
             </div>
